@@ -72,11 +72,13 @@ def convert(input_filename, output_filename, ocr_lang, stdout_callback):
     safe_dir = os.path.join(tmpdir.name, "safe")
     os.makedirs(pixel_dir, exist_ok=True)
     os.makedirs(safe_dir, exist_ok=True)
+    # print(pixel_dir)
+    # import pdb; pdb.set_trace()
 
     if container_tech == "docker":
         platform_args = ["--platform", "linux/amd64"]
     else:
-        platform_args = []
+        platform_args = ["--userns", "keep-id"]
 
     # Convert document to pixels
     args = (
@@ -84,9 +86,9 @@ def convert(input_filename, output_filename, ocr_lang, stdout_callback):
         + platform_args
         + [
             "-v",
-            f"{input_filename}:/tmp/input_file",
+            f"{input_filename}:/tmp/input_file:z",
             "-v",
-            f"{pixel_dir}:/dangerzone",
+            f"{pixel_dir}:/dangerzone:z",
             container_name,
             "/usr/bin/python3",
             "/usr/local/bin/dangerzone.py",
@@ -105,9 +107,9 @@ def convert(input_filename, output_filename, ocr_lang, stdout_callback):
             + platform_args
             + [
                 "-v",
-                f"{pixel_dir}:/dangerzone",
+                f"{pixel_dir}:/dangerzone:z",
                 "-v",
-                f"{safe_dir}:/safezone",
+                f"{safe_dir}:/safezone:z",
                 "-e",
                 f"OCR={ocr}",
                 "-e",

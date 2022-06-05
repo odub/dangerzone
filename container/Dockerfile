@@ -99,4 +99,4 @@ RUN adduser -h /home/user -s /bin/sh -D user
 # /dangerzone is where the second script expects files to be put by the first one
 #
 # /safezone is where the wrapper eventually moves the sanitized files.
-VOLUME /dangerzone /tmp/input_file /safezone
+VOLUME /dangerzone:z /tmp/input_file:z /safezone:z
